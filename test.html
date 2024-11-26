@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Circle of Sine and Cosine Values</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        #quiz-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .answer-button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100px; /* Set a fixed width for all answer buttons */
+            height: 85px; /* Set a fixed height for all answer buttons */
+        }
+
+        #next-button, #reset-button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #timer {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        #score {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        #question {
+            font-size: 24px; /* Increase the font size for the question */
+            margin-bottom: 20px;
+        }
+
+        .choices-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .choices-row div {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div id="quiz-container">
+        <div id="timer">Time left: <span id="time">15</span> seconds</div>
+        <div id="question"></div>
+        <div class="choices-row" id="choices"></div>
+        <button id="next-button" onclick="nextQuestion()">Next Question</button>
+        <button id="reset-button" onclick="resetQuiz()">Reset Quiz</button>
+	<div id="score">Correct: <span id="correct">0</span> | Incorrect: <span id="incorrect">0</span></div>
+    </div>
+    <script>
+        const questions = [
+	    // Quadrant 1 Values for Cosine
+            {
+                question: "\\( \\cos\\left(0\\right) \\)",
+                choices: ["\\(0\\)", "\\( \\dfrac{1}{2} \\)", "\\( \\dfrac{\\sqrt{2}}{2} \\)", "\\( \\dfrac{\\sqrt{3}}{2} \\)", "\\(1\\)"],
+                correct: 4
+            },
+            {
+                question: "\\( \\cos\\left(\\dfrac{\\pi}{6}\\right) \\)",
+                choices: ["\\(0\\)", "\\( \\dfrac{1}{2} \\)", "\\( \\dfrac{\\sqrt{2}}{2} \\)", "\\( \\dfrac{\\sqrt{3}}{2} \\)", "\\(1\\)"],
+                correct: 3
+            },
+            {
+                question: "\\( \\cos\\left(\\dfrac{\\pi}{4}\\right) \\)",
+                choices: ["\\(0\\)", "\\( \\dfrac{1}{2} \\)", "\\( \\dfrac{\\sqrt{2}}{2} \\)", "\\( \\dfrac{\\sqrt{3}}{2} \\)", "\\(1\\)"],
+                correct: 2
+            },
+			{
+                question: "\\( \\cos\\left(\\dfrac{\\pi}{3}\\right) \\)",
+                choices: ["\\(0\\)", "\\( \\dfrac{1}{2} \\)", "\\( \\dfrac{\\sqrt{2}}{2} \\)", "\\( \\dfrac{\\sqrt{3}}{2} \\)", "\\(1\\)"],
+                correct: 1
+            },
+			{
+                question: "\\( \\cos\\left(\\dfrac{\\pi}{2}\\right) \\)",
+                choices: ["\\(0\\)", "\\( \\dfrac{1}{2} \\)", "\\( \\dfrac{\\sqrt{2}}{2} \\)", "\\( \\dfrac{\\sqrt{3}}{2} \\)", "\\(1\\)"],
+                correct: 0
+            },
+
+	    // Quadrant 1 Values for Sine
+            {
+                question: "\\( \\sin\\left(0\\right) \\)",
+                choices: ["\\(0\\)", "\\( \\dfrac{1}{2} \\)", "\\( \\dfrac{\\sqrt{2}}{2} \\)", "\\( \\dfrac{\\sqrt{3}}{2} \\)", "\\(1\\)"],
+                correct: 0
+            },
+            {
+                question: "\\( \\sin\\left(\\dfrac{\\pi}{6}\\right) \\)",
+                choices: ["\\(0\\)", "\\( \\dfrac{1}{2} \\)", "\\( \\dfrac{\\sqrt{2}}{2} \\)", "\\( \\dfrac{\\sqrt{3}}{2} \\)", "\\(1\\)"],
+                correct: 1
+            },
+            {
+                question: "\\( \\sin\\left(\\dfrac{\\pi}{4}\\right) \\)",
+                choices: ["\\(0\\)", "\\( \\dfrac{1}{2} \\)", "\\( \\dfrac{\\sqrt{2}}{2} \\)", "\\( \\dfrac{\\sqrt{3}}{2} \\)", "\\(1\\)"],
+                correct: 2
+            },
+			{
+                question: "\\( \\sin\\left(\\dfrac{\\pi}{3}\\right) \\)",
+                choices: ["\\(0\\)", "\\( \\dfrac{1}{2} \\)", "\\( \\dfrac{\\sqrt{2}}{2} \\)", "\\( \\dfrac{\\sqrt{3}}{2} \\)", "\\(1\\)"],
+                correct: 3
+            },
+			{
+                question: "\\( \\sin\\left(\\dfrac{\\pi}{2}\\right) \\)",
+                choices: ["\\(0\\)", "\\( \\dfrac{1}{2} \\)", "\\( \\dfrac{\\sqrt{2}}{2} \\)", "\\( \\dfrac{\\sqrt{3}}{2} \\)", "\\(1\\)"],
+                correct: 4
+            },
+			// Quadrant 2 Values for Cosine
+			{
+                question: "\\( \\cos\\left(\\dfrac{2\\pi}{3}\\right) \\)",
+                choices: ["\\(0\\)", "\\( -\\dfrac{1}{2} \\)", "\\( -\\dfrac{\\sqrt{2}}{2} \\)", "\\( -\\dfrac{\\sqrt{3}}{2} \\)", "\\(-1\\)"],
+                correct: 1
+            },
+			{
+                question: "\\( \\cos\\left(\\dfrac{3\\pi}{4}\\right) \\)",
+                choices: ["\\(0\\)", "\\( -\\dfrac{1}{2} \\)", "\\( -\\dfrac{\\sqrt{2}}{2} \\)", "\\( -\\dfrac{\\sqrt{3}}{2} \\)", "\\(-1\\)"],
+                correct: 2
+            },
+			{
+                question: "\\( \\cos\\left(\\dfrac{5\\pi}{6}\\right) \\)",
+                choices: ["\\(0\\)", "\\( -\\dfrac{1}{2} \\)", "\\( -\\dfrac{\\sqrt{2}}{2} \\)", "\\( -\\dfrac{\\sqrt{3}}{2} \\)", "\\(-1\\)"],
+                correct: 3
+            },
+			{
+                question: "\\( \\cos\\left({\\pi}\\right) \\)",
+                choices: ["\\(0\\)", "\\( -\\dfrac{1}{2} \\)", "\\( -\\dfrac{\\sqrt{2}}{2} \\)", "\\( -\\dfrac{\\sqrt{3}}{2} \\)", "\\(-1\\)"],
+                correct: 4
+            },
+
+	    // Quadrant 2 Values for Sine
+			{
+                question: "\\( \\sin\\left(\\dfrac{2\\pi}{3}\\right) \\)",
+                choices: ["\\(0\\)", "\\( \\dfrac{1}{2} \\)", "\\( \\dfrac{\\sqrt{2}}{2} \\)", "\\( \\dfrac{\\sqrt{3}}{2} \\)", "\\(1\\)"],
+                correct: 3
+            },
+			{
+                question: "\\( \\sin\\left(\\dfrac{3\\pi}{4}\\right) \\)",
+                choices: ["\\(0\\)", "\\( \\dfrac{1}{2} \\)", "\\( \\dfrac{\\sqrt{2}}{2} \\)", "\\( \\dfrac{\\sqrt{3}}{2} \\)", "\\(1\\)"],
+                correct: 2
+            },
+			{
+                question: "\\( \\sin\\left(\\dfrac{5\\pi}{6}\\right) \\)",
+                choices: ["\\(0\\)", "\\( \\dfrac{1}{2} \\)", "\\( \\dfrac{\\sqrt{2}}{2} \\)", "\\( \\dfrac{\\sqrt{3}}{2} \\)", "\\(1\\)"],
+                correct: 1
+            },
+			{
+                question: "\\( \\sin\\left({\\pi}\\right) \\)",
+                choices: ["\\(0\\)", "\\( \\dfrac{1}{2} \\)", "\\( \\dfrac{\\sqrt{2}}{2} \\)", "\\( \\dfrac{\\sqrt{3}}{2} \\)", "\\(1\\)"],
+                correct: 0
+            },
+
+            // Add more questions as needed
+        ];
+
+        let usedQuestions = [];
+        let timer;
+        let timeLeft = 15; // Set the time limit for each question in seconds
+        let correctCount = 0;
+        let incorrectCount = 0;
+
+        function loadQuestion() {
+            if (usedQuestions.length === questions.length) {
+                alert('You have completed all the questions!');
+                return;
+            }
+
+            let currentQuestionIndex;
+            do {
+                currentQuestionIndex = Math.floor(Math.random() * questions.length);
+            } while (usedQuestions.includes(currentQuestionIndex));
+
+            usedQuestions.push(currentQuestionIndex);
+
+            const questionElement = document.getElementById('question');
+            const choicesElement = document.getElementById('choices');
+            const currentQuestion = questions[currentQuestionIndex];
+
+            questionElement.innerHTML = currentQuestion.question;
+            choicesElement.innerHTML = '';
+
+            let row;
+            currentQuestion.choices.forEach((choice, index) => {
+                if (index % 2 === 0) { // modulo value sets the number of items per row for answer choices
+                    row = document.createElement('div');
+                    choicesElement.appendChild(row);
+                }
+                const button = document.createElement('button');
+                button.className = 'answer-button';
+                button.innerHTML = choice;
+                button.onclick = () => checkAnswer(button, index);
+                row.appendChild(button);
+            });
+
+            MathJax.typeset();
+            startTimer();
+        }
+
+        function checkAnswer(button, selectedIndex) {
+            clearInterval(timer);
+            const currentQuestion = questions[usedQuestions[usedQuestions.length - 1]];
+            if (selectedIndex === currentQuestion.correct) {
+                correctCount++;
+                button.style.backgroundColor = 'LimeGreen';
+            } else {
+                incorrectCount++;
+                button.style.backgroundColor = 'FireBrick';
+            }
+            updateScore();
+            setTimeout(nextQuestion, 1000); // Move to the next question after a short delay
+        }
+
+        function nextQuestion() {
+            clearInterval(timer);
+            loadQuestion();
+        }
+
+        function resetQuiz() {
+            usedQuestions = [];
+            correctCount = 0;
+            incorrectCount = 0;
+            updateScore();
+            loadQuestion();
+        }
+
+        function startTimer() {
+            timeLeft = 15;
+            document.getElementById('time').textContent = timeLeft;
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('time').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    incorrectCount++;
+                    alert('Time is up!');
+                    updateScore();
+                    nextQuestion();
+                }
+            }, 1000);
+        }
+
+        function updateScore() {
+            document.getElementById('correct').textContent = correctCount;
+            document.getElementById('incorrect').textContent = incorrectCount;
+        }
+
+        window.onload = loadQuestion;
+    </script>
+</body>
+</html>
